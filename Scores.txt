@@ -1,0 +1,9 @@
+Alaa#10#Esraa#20
+Esraa#5#Abeer#10
+Abeer#10#Rana#5
+Rana#5#Alaa#5
+Asmaa#20#Amina#7
+Amina#3#Esraa#100
+Esraa#5#Computer#2
+Computer#1#Amira#29
+sdfghjkl;#1#Computer#0

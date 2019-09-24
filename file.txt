@@ -1,0 +1,178 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package files;
+
+import static files.SaveScore.GetScorePlayer1;
+import static files.SaveScore.GetScorePlayer2;
+import static files.SaveScore.PlayBefore;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author VIP
+ */
+public class SaveScore {
+    public String player1 ;
+    public String player2 ;
+    public int    Score1  ;
+    public int    Score2  ;
+    /////////////////////////////////////////////////
+    public SaveScore (String player1, String player2)
+    {
+        this.player1 = player1 ;
+        this.player2 = player2 ;
+        this.Score1  = 0 ;
+        this.Score2  = 0 ;
+    }
+    public static String PlayBefore(String player1 , String player2)
+    {
+        try 
+        {
+            BufferedReader br;
+            br = new BufferedReader(new FileReader("Scores.txt"));
+        
+    String line;
+            try {
+                while ((line = br.readLine()) != null) {
+                    // process the line.
+                    if (line.contains(player1)&&line.contains(player2) )
+                    {
+                        return line ;
+                    }
+                }       } catch (IOException ex) {
+                Logger.getLogger(SaveScore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+}       catch (FileNotFoundException ex) {
+            Logger.getLogger(SaveScore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Not Found";
+    }
+    public  static int GetScorePlayer1 (String Player1 , String Player2)
+    {
+        String [] detailes;
+        if (PlayBefore(Player1, Player2).equals("Not Found"))
+            return 0;
+        else {
+            
+            detailes = PlayBefore(Player1, Player2).split("#");
+        }
+        return Integer.valueOf(detailes[1]);
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+    public  static int GetScorePlayer2 (String Player1 , String Player2)
+    {
+        String [] detailes;
+        if (PlayBefore(Player1, Player2).equals("Not Found"))
+            return 0;
+        else {
+            
+            detailes = PlayBefore(Player1, Player2).split("#");
+        }
+        return Integer.valueOf(detailes[3]);
+    }
+    //*********************************************************************************************
+    public static void Save (String Player1 , String Player2 , int Winner)
+    {
+        try {
+            String line = "";
+            if (PlayBefore(Player1, Player2).equals("Not Found"))
+            {
+                if (Winner == 1)
+                    line = Player1 + "#" + "1"+ "#" + Player2 +"#"+ "0";
+                else if (Winner == 2)
+                    line = Player1 + "#" + "0"+ "#" + Player2 +"#"+ "1";
+            }
+            else {
+                int S1 = GetScorePlayer1(Player1, Player2);
+                int S2 = GetScorePlayer2(Player1, Player2);
+                ////////////////////////////////////////////////////////////////////////////////////////
+                if (Winner == 1)
+                {
+                    S1= S1 + 1;
+                    line = Player1 + "#" + String.valueOf(S1) +"#"+Player2 +"#" + String.valueOf(S2);
+                }
+                else if (Winner == 2)
+                {
+                    S2= S2 + 1;
+                    line = Player1 + "#" + String.valueOf(S1) +"#"+Player2 +"#" + String.valueOf(S2);
+                }
+                Delete(Player1 , Player2);
+                
+            }
+            BufferedWriter writer;
+            writer = new BufferedWriter(new FileWriter("Scores.txt", true));
+            
+                writer.append("\n");
+                writer.append(line);
+                
+                writer.newLine();
+                  writer.close();
+            } catch (IOException ex) {
+            Logger.getLogger(SaveScore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+        
+        
+        
+        
+    }
+    public static void Delete (String Player1 , String Player2 )
+    {
+        List<String> files = new ArrayList<String>(); 
+           try{
+              
+	    BufferedReader br = null;
+
+	try {
+
+		br = new BufferedReader(new FileReader("Scores.txt"));
+
+		String line2;
+		while ((line2 = br.readLine()) != null) {
+                    if (line2.equals( PlayBefore( Player1 , Player2)))
+                        continue;
+                    else
+			files.add(line2);
+		}
+                br.close();
+
+	} catch (IOException e) {
+		e.printStackTrace();
+        }
+		
+	
+                
+                
+                 ///////////////////////////////////////////////////////////////////////////////////
+                 PrintWriter pw = new PrintWriter("Scores.txt");
+                    pw.close();
+           BufferedWriter writer ;
+           writer = new BufferedWriter(new FileWriter("Scores.txt", true));
+           for (String i : files)
+           {
+               
+               writer.append(i);
+               writer.newLine();
+           }
+          
+          
+               writer.close();
+       } catch (IOException ex) {
+           Logger.getLogger(SaveScore.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }
+        
+}

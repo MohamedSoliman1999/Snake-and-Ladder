@@ -1,0 +1,2 @@
+DiceDecleration.test
+DiceDecleration.DiceImageProcessing
